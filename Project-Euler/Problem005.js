@@ -1,20 +1,36 @@
-/*
-Smallest multiple
+import { PrimeFactors } from '../Maths/PrimeFactors.js'
 
-2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
-What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
-*/
+/**
+ * Smallest Multiple
+ * @link https://projecteuler.net/problem=5
+ *
+ * 2520 is the smallest number that can be divided by each of the numbers from 1 to 10 without any remainder.
+ *
+ * What is the smallest positive number that is evenly divisible by all of the numbers from 1 to 20?
+ */
 
-export const findSmallestMultiple = (maxDivisor) => {
-  const divisors = Array.from({ length: maxDivisor }, (_, i) => i + 1)
-  let num = maxDivisor + 1
-  let result
+export function findSmallestMultiple(maxDivisor) {
+  const maxPowers = {}
+  for (let divisor = 2; divisor <= maxDivisor; divisor++) {
+    const factors = PrimeFactors(divisor)
 
-  while (!result) {
-    const isDivisibleByAll = divisors.every((divisor) => num % divisor === 0)
-    if (isDivisibleByAll) result = num
-    else num++
+    // combine/count prime factors
+    let powers = {}
+    for (const factor of factors) {
+      powers[factor] = (powers[factor] ?? 0) + 1
+    }
+
+    // save largest factors
+    for (const factor in powers) {
+      if (powers[factor] > (maxPowers[factor] ?? 0)) {
+        maxPowers[factor] = powers[factor]
+      }
+    }
   }
 
-  return result
+  // multiply all primes
+  return Object.entries(maxPowers).reduce(
+    (product, [prime, power]) => product * Math.pow(prime, power),
+    1
+  )
 }
