@@ -3,9 +3,9 @@ import { introsort } from '../IntroSort'
 describe('introsort', () => {
   it('should have a robust default comparator', () => {
     // toString, null, undefined
-    const mixedData = [undefined, '2', 1, false, null]
+    const mixedData = [undefined, '2', 1, false, null, { a: 7 }]
     introsort(mixedData)
-    expect(mixedData).toEqual([1, '2', false, null, undefined])
+    expect(mixedData).toEqual([1, '2', { a: 7 }, false, null, undefined])
 
     // Symbol
     expect(() => introsort([Symbol(), Symbol()])).toThrowError()
@@ -14,6 +14,7 @@ describe('introsort', () => {
   it('fails gracefully', () => {
     introsort('string')
     introsort([])
+    introsort(['one len'])
     introsort([1, 2, 3], 'string')
   })
 
